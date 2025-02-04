@@ -61,6 +61,8 @@ export async function POST(req: Request) {
   if (eventType === "user.created") {
     const { id, email_addresses, image_url, first_name, last_name, username } = evt.data;
 
+    console.log("Event Triggered",evt.data)
+
     const user = {
       clerkId: id,
       email: email_addresses[0].email_address,
@@ -69,8 +71,11 @@ export async function POST(req: Request) {
       lastName: last_name ?? "",
       photo: image_url,
     };
+    
 
     const newUser = await createUser(user);
+
+    console.log('New User Created' ,newUser);
 
     // Set public metadata
     if (newUser) {
@@ -79,7 +84,11 @@ export async function POST(req: Request) {
         publicMetadata: {
           userId: newUser._id,
         },
+      
       });
+
+  
+      console.log('Successfully stored Id', response);
     }
 
     return NextResponse.json({ message: "OK", user: newUser });
