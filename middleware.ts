@@ -1,6 +1,17 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-export default clerkMiddleware();
+const isPublicRoute = createRouteMatcher([
+  '/',
+  '/api/webhooks/clerk',
+  '/api/webhooks/stripe'
+]);
+
+export default clerkMiddleware((auth, req) => {
+  if (isPublicRoute(req)) {
+    return; // Allow access to public routes
+  }
+  auth(); // Protect other routes
+});
 
 export const config = {
   matcher: [
@@ -9,12 +20,4 @@ export const config = {
     // Always run for API routes
     '/(api|trpc)(.*)',
   ],
-
-// export const config = {
-//     matcher: [
-//       "/((?!.next|_next|api|static|favicon.ico).*)", // Protects all pages except Next.js internals
-//       "/api/protected/(.*)", // Only protect API routes explicitly
-//     ],
-
-  
 };
