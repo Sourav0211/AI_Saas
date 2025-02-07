@@ -8,6 +8,7 @@ import { Webhook } from "svix";
 import { createUser, deleteUser, updateUser } from "../../../../lib/actions/user.actions";
 
 export async function POST(req: Request) {
+  console.log("Webhook hit")
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
@@ -48,7 +49,7 @@ export async function POST(req: Request) {
     }) as WebhookEvent;
   } catch (err) {
     console.error("Error verifying webhook:", err);
-    return new Response("Error occured", {
+    return new Response("Error occurred", {
       status: 400,
     });
   }

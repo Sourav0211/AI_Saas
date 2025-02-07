@@ -7,8 +7,8 @@ export interface Iuser extends Document {
     photo?: string;
     firstName?: string;
     lastName?: string;
-    planId: number;
-    creditBalance: number;
+    planId?: number;
+    creditBalance?: number;
 }
 
 const UserSchema = new Schema({
