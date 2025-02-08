@@ -1,15 +1,26 @@
-import { Collection } from "@/components/shared/Collection"
-import { navLinks } from "@/constants"
-import { getAllImages } from "@/lib/actions/image.actions"
-import Image from "next/image"
-import Link from "next/link"
+import { Collection } from "@/components/shared/Collection";
+import { navLinks } from "@/constants";
+import { getAllImages } from "@/lib/actions/image.actions";
+import Image from "next/image";
+import Link from "next/link";
+
+interface SearchParamProps {
+  searchParams: Promise<{
+    page?: string;
+    query?: string;
+  }>;
+}
 
 const Home = async ({ searchParams }: SearchParamProps) => {
+  // Await the resolution of searchParams
+  const { page, query } = await searchParams;
 
-  const page = Number(searchParams?.page) || 1;
-  const searchQuery = (searchParams?.query as string) || '';
+  // Safely convert page to a number, defaulting to 1 if not provided
+  const currentPage = Number(page) || 1;
+  const searchQuery = query || "";
 
-  const images = await getAllImages({ page, searchQuery})
+  // Fetch images based on page and search query
+  const images = await getAllImages({ page: currentPage, searchQuery });
 
   return (
     <>
@@ -34,15 +45,15 @@ const Home = async ({ searchParams }: SearchParamProps) => {
       </section>
 
       <section className="sm:mt-12">
-        <Collection 
+        <Collection
           hasSearch={true}
           images={images?.data}
           totalPages={images?.totalPage}
-          page={page}
+          page={currentPage} // Make sure page is passed as a number
         />
       </section>
     </>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
