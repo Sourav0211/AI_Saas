@@ -7,15 +7,12 @@ import Header from "@/components/shared/Header";
 import { getUserImages } from "@/lib/actions/image.actions";
 import { getUserById } from "@/lib/actions/user.actions";
 
-interface SearchParamProps {
-  searchParams: {
-    page?: string;
-  };
-}
+type SearchParams = Promise<{ page?: string }>;
 
-const Profile = async ({ searchParams }: SearchParamProps) => {
-  const { page } = searchParams; // ✅ No need to await
-  const currentPage = Number(page) || 1; // ✅ Ensure it's a number
+export default async function Profile(props: { searchParams: SearchParams }) {
+  const searchParams = await props.searchParams;
+  const page = searchParams.page;
+  const currentPage = Number(page) || 1;
 
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
@@ -66,6 +63,4 @@ const Profile = async ({ searchParams }: SearchParamProps) => {
       </section>
     </>
   );
-};
-
-export default Profile;
+}

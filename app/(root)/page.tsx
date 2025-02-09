@@ -4,15 +4,12 @@ import { getAllImages } from "@/lib/actions/image.actions";
 import Image from "next/image";
 import Link from "next/link";
 
-interface SearchParamProps {
-  searchParams: {
-    page?: string;
-    query?: string;
-  };
-}
+type SearchParams = Promise<{ page?: string; query?: string }>;
 
-const Home = async ({ searchParams }: SearchParamProps) => {
-  const { page, query } = searchParams; // ✅ No need to await
+export default async function Home(props: { searchParams: SearchParams }) {
+  const searchParams = await props.searchParams;
+  const page = searchParams.page;
+  const query = searchParams.query;
 
   const currentPage = Number(page) || 1; // ✅ Ensure page is a number
   const searchQuery = query || ""; // ✅ Default to an empty string
@@ -45,12 +42,10 @@ const Home = async ({ searchParams }: SearchParamProps) => {
         <Collection
           hasSearch={true}
           images={images?.data}
-          totalPages={images?.totalPage} // ✅ Fixed typo (should be totalPages)
+          totalPages={images?.totalPages} // ✅ Ensured correct property name
           page={currentPage} // ✅ Ensured it's a number
         />
       </section>
     </>
   );
-};
-
-export default Home;
+}
