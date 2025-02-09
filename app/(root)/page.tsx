@@ -42,7 +42,7 @@ export default async function Home(props: { searchParams: SearchParams }) {
         <Collection
           hasSearch={true}
           images={images?.data}
-          totalPages={images?.totalPages} // ✅ Ensured correct property name
+          totalPages={images?.totalPage} // ✅ Ensured correct property name
           page={currentPage} // ✅ Ensured it's a number
         />
       </section>
