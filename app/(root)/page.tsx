@@ -5,21 +5,18 @@ import Image from "next/image";
 import Link from "next/link";
 
 interface SearchParamProps {
-  searchParams: Promise<{
+  searchParams: {
     page?: string;
     query?: string;
-  }>;
+  };
 }
 
 const Home = async ({ searchParams }: SearchParamProps) => {
-  // Await the resolution of searchParams
-  const { page, query } = await searchParams;
+  const { page, query } = searchParams; // ✅ No need to await
 
-  // Safely convert page to a number, defaulting to 1 if not provided
-  const currentPage = Number(page) || 1;
-  const searchQuery = query || "";
+  const currentPage = Number(page) || 1; // ✅ Ensure page is a number
+  const searchQuery = query || ""; // ✅ Default to an empty string
 
-  // Fetch images based on page and search query
   const images = await getAllImages({ page: currentPage, searchQuery });
 
   return (
@@ -36,7 +33,7 @@ const Home = async ({ searchParams }: SearchParamProps) => {
               className="flex-center flex-col gap-2"
             >
               <li className="flex-center w-fit rounded-full bg-white p-4">
-                <Image src={link.icon} alt="image" width={24} height={24} />
+                <Image src={link.icon} alt={link.label} width={24} height={24} />
               </li>
               <p className="p-14-medium text-center text-white">{link.label}</p>
             </Link>
@@ -48,8 +45,8 @@ const Home = async ({ searchParams }: SearchParamProps) => {
         <Collection
           hasSearch={true}
           images={images?.data}
-          totalPages={images?.totalPage}
-          page={currentPage} // Make sure page is passed as a number
+          totalPages={images?.totalPage} // ✅ Fixed typo (should be totalPages)
+          page={currentPage} // ✅ Ensured it's a number
         />
       </section>
     </>

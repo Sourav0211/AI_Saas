@@ -7,15 +7,17 @@ import Header from "@/components/shared/Header";
 import { getUserImages } from "@/lib/actions/image.actions";
 import { getUserById } from "@/lib/actions/user.actions";
 
+interface SearchParamProps {
+  searchParams: {
+    page?: string;
+  };
+}
+
 const Profile = async ({ searchParams }: SearchParamProps) => {
-  // Await the searchParams to ensure it's resolved
-  const { page } = await searchParams;  // Await the searchParams to resolve
-  
-  // Ensure that `page` is a number
-  const currentPage = Number(page) || 1;  // Converts to a number, defaults to 1 if invalid
+  const { page } = searchParams; // ✅ No need to await
+  const currentPage = Number(page) || 1; // ✅ Ensure it's a number
 
   const { userId } = await auth();
-
   if (!userId) redirect("/sign-in");
 
   const user = await getUserById(userId);
@@ -45,7 +47,7 @@ const Profile = async ({ searchParams }: SearchParamProps) => {
           <div className="mt-4 flex items-center gap-4">
             <Image
               src="/assets/icons/photo.svg"
-              alt="coins"
+              alt="image manipulation"
               width={50}
               height={50}
               className="size-9 md:size-12"
@@ -59,12 +61,11 @@ const Profile = async ({ searchParams }: SearchParamProps) => {
         <Collection
           images={images?.data}
           totalPages={images?.totalPages}
-          page={currentPage}  // Correct type for `page`
+          page={currentPage}
         />
       </section>
     </>
   );
 };
-
 
 export default Profile;
